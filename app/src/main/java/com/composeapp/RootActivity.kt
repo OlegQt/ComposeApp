@@ -3,26 +3,19 @@ package com.composeapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
+import androidx.activity.viewModels
+import com.composeapp.testScreen.ShowTestScreen
+import com.composeapp.testScreen.TestScreenVm
 
-class RootActivity:ComponentActivity() {
+class RootActivity : ComponentActivity() {
+    private val viewModel: TestScreenVm by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            App()
+            ShowTestScreen(vm = viewModel)
         }
-    }
-
-    @Composable
-    fun App(){
-        Text(
-            text = "Hello",
-            color = Color.Red
-        )
     }
 }
 
