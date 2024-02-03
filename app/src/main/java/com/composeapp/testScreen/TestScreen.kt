@@ -2,13 +2,23 @@ package com.composeapp.testScreen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Button
-import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun ShowTestScreen(vm: TestScreenVm) {
@@ -22,9 +32,8 @@ fun ShowContent(vm: TestScreenVm) {
     val msg = vm.textMessage.observeAsState()
 
     Column {
-        ShowTextMessage(msg = msg.value ?: "Empty")
-        Divider()
-        ShowActionButton { vm.foo() }
+        ShowInputTxtWithHelper(vm = vm)
+        ShowTextMessage(msg = msg.value.toString())
 
     }
 }
@@ -38,5 +47,53 @@ fun ShowTextMessage(msg: String) {
 fun ShowActionButton(foo: () -> Unit) {
     Button(onClick = { foo.invoke() }) {
         Text(text = "Action")
+    }
+}
+
+@Composable
+fun ShowInputTxtWithHelper(vm: TestScreenVm) {
+    val txtState = vm.textInputState.collectAsState()
+
+    TextField(
+        value = txtState.value.text,
+        onValueChange = { vm.inputText(it) },
+        label = {
+            TxtLabel(string = txtState.value.label)
+        },
+        isError = txtState.value.isError,
+        modifier = Modifier.fillMaxWidth(),
+        textStyle = TextStyle(fontSize = 18.sp),
+        leadingIcon = {
+            txtAddButton(isEnabled = !txtState.value.isError) {
+                vm.addTextLog(newLogString = txtState.value.text)
+            }
+        },
+        trailingIcon = {
+            txtClearButton(isVisible = txtState.value.text.isNotEmpty()) {
+                vm.clearTextInput()
+            }
+        }
+    )
+}
+
+@Composable
+fun TxtLabel(string: String) {
+    Text(text = string)
+}
+
+@Composable
+fun txtAddButton(isEnabled: Boolean, doOnPush: () -> Unit) {
+    val color = if (isEnabled) Color.DarkGray else Color.Red
+    IconButton(onClick = { doOnPush.invoke() }) {
+        Icon(imageVector = Icons.Filled.AddCircle, contentDescription = null, tint = color)
+    }
+}
+
+@Composable
+fun txtClearButton(isVisible: Boolean, doOnPush: () -> Unit) {
+    if (isVisible) {
+        IconButton(onClick = { doOnPush.invoke() }) {
+            Icon(imageVector = Icons.Filled.Clear, contentDescription = null)
+        }
     }
 }
