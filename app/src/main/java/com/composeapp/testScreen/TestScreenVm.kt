@@ -22,6 +22,11 @@ class TestScreenVm : ViewModel() {
                 error -> TextInputState.ERROR_MSG
                 else -> "${newTxt.length} letters"
             }
+            helperText = when {
+                newTxt.isEmpty() -> TextInputState.REGULAR_TXT
+                error -> TextInputState.ERROR_MSG
+                else -> "Your string =\"$newTxt\""
+            }
 
             isError = error
         }
