@@ -1,16 +1,14 @@
 package com.composeapp.testScreen
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
 import androidx.compose.material.Card
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
+import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
@@ -21,16 +19,19 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.composeapp.testScreen.theme.AppTheme
 
 @Composable
 fun ShowTestScreen(vm: TestScreenVm) {
-    Surface(modifier = Modifier.fillMaxSize()) {
-        ShowContent(vm)
+    val themeMode = vm.themeMode.observeAsState()
+    AppTheme(darkTheme = themeMode.value ?: true) {
+        Surface(modifier = Modifier.fillMaxSize()) {
+            ShowContent(vm)
+        }
     }
 }
 
@@ -44,22 +45,18 @@ fun ShowContent(vm: TestScreenVm) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(all = 12.dp)
+                .weight(1.0f)
         ) {
             ShowTextMessage(msg = msg.value.toString())
         }
+        Switch(checked = vm.themeMode.value ?: true, onCheckedChange = { vm.changeThemeMode() })
+
     }
 }
 
 @Composable
 fun ShowTextMessage(msg: String) {
     Text(text = msg)
-}
-
-@Composable
-fun ShowActionButton(foo: () -> Unit) {
-    Button(onClick = { foo.invoke() }) {
-        Text(text = "Action")
-    }
 }
 
 @Composable
@@ -89,7 +86,7 @@ fun ShowInputTxtWithHelper(vm: TestScreenVm) {
         Text(
             modifier = Modifier.padding(horizontal = 16.dp),
             text = txtState.value.helperText,
-            color = if(!txtState.value.isError) Color.Gray else Color.Red,
+            color = if (!txtState.value.isError) Color.Gray else Color.Red,
             fontStyle = FontStyle.Italic
         )
     }

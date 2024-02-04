@@ -10,6 +10,9 @@ class TestScreenVm : ViewModel() {
     private val _textMessage = MutableLiveData<String>("")
     val textMessage: LiveData<String> = _textMessage
 
+    private val _themeMode = MutableLiveData<Boolean>(false)
+    val themeMode = _themeMode as LiveData<Boolean>
+
     private val _textInputState = MutableStateFlow(TextInputState())
     val textInputState = _textInputState as StateFlow<TextInputState>
 
@@ -33,7 +36,7 @@ class TestScreenVm : ViewModel() {
     }
 
     private fun checkTextInput(textLine: String): Boolean {
-        val pattern: String = "\\d"
+        val pattern = "\\d"
         val regex = Regex(pattern)
 
         return regex.containsMatchIn(textLine)
@@ -45,6 +48,12 @@ class TestScreenVm : ViewModel() {
 
     fun addTextLog(newLogString: String) {
         _textMessage.value = _textMessage.value.plus(newLogString).plus("\n")
+    }
+
+    fun changeThemeMode() {
+        _themeMode.value?.let {
+            this._themeMode.value = !it
+        }
     }
 
     class TextInputState() {
