@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
+import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -39,8 +40,13 @@ fun ShowContent(vm: TestScreenVm) {
 
     Column {
         ShowInputTxtWithHelper(vm = vm)
-        ShowTextMessage(msg = msg.value.toString())
-
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(all = 12.dp)
+        ) {
+            ShowTextMessage(msg = msg.value.toString())
+        }
     }
 }
 
@@ -83,12 +89,10 @@ fun ShowInputTxtWithHelper(vm: TestScreenVm) {
         Text(
             modifier = Modifier.padding(horizontal = 16.dp),
             text = txtState.value.helperText,
-            color = Color.Gray,
+            color = if(!txtState.value.isError) Color.Gray else Color.Red,
             fontStyle = FontStyle.Italic
         )
     }
-    Spacer(modifier = Modifier.padding(vertical = 64.dp))
-    Divider(modifier = Modifier.padding(horizontal = 32.dp))
 }
 
 @Composable

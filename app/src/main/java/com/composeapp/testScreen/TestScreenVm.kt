@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class TestScreenVm : ViewModel() {
-    private val _textMessage = MutableLiveData<String>(null)
+    private val _textMessage = MutableLiveData<String>("")
     val textMessage: LiveData<String> = _textMessage
 
     private val _textInputState = MutableStateFlow(TextInputState())
